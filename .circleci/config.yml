@@ -116,6 +116,34 @@ jobs:
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
+      - run:
+            name: Add back-end ip to ansible inventory
+            command: |
+              # added back-end ip to inventory file
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+      # rollback code
+
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["f9:05:52:cb:16:b7:3f:57:2e:0c:65:92:df:8e:c7:e9"]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+
+  
 
 
 workflows:
@@ -136,4 +164,5 @@ workflows:
           #filters:
           #  branches:
           #    only: [test-feature-branch]
-      
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
