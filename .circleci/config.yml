@@ -120,6 +120,13 @@ jobs:
             name: Add back-end ip to ansible inventory
             command: |
               # added back-end ip to inventory file
+      - run:
+            name: Install dependencies
+            command: |
+              sudo apt install tar
+              sudo apt install gzip
+              sudo apt install ansible
+              sudo apt install awscli
       - persist_to_workspace:
           root: ~/
           paths:
