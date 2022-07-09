@@ -123,9 +123,8 @@ jobs:
       - run:
             name: Install dependencies
             command: |
-              apt install tar
-              apt install gzip
-              apt install ansible
+              apk add --install tar
+              apt add --install gzip
       - persist_to_workspace:
           root: ~/
           paths:
